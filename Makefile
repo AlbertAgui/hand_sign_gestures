@@ -12,7 +12,6 @@ install:
 	pip install mediapipe
 
 git_help:
-	git_help:
 	@echo " This is a basic set of git instructions usefull to manage the UVM repository"
 	@echo " git clone PATH               :Clone git repository"
 	@echo " git status                   :Show the working tree status"
