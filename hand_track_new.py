@@ -10,6 +10,33 @@ cap = cv2.VideoCapture(0)
 #cv2.namedWindow('MediaPipe Hands', cv2.WINDOW_NORMAL)
 #cv2.resizeWindow('MediaPipe Hands', 1920, 1080)  # You can adjust the size as needed
 
+def get_num_hand(results):
+  output = 0
+  r_hand_landmarks = results.multi_hand_landmarks
+  if r_hand_landmarks:
+    return len(r_hand_landmarks)
+  return output
+
+def get_hand_label(results, hand_id):
+  label = "not found"
+  num_hand = get_num_hand(results)
+  if((hand_id < num_hand) and (hand_id >= 0)):
+    label = results.multi_handedness[hand_id].classification[0].label
+  return label
+
+#return dict accessed by landmark id
+def get_hand_landmarks(results, hand_id):
+  hand_landmarks_dict = {}
+
+  num_hand = get_num_hand(results)
+  if((hand_id < num_hand) and (hand_id >= 0)):
+    for ids, landmark in enumerate(results.multi_hand_landmarks[hand_id].landmark):
+      cx = landmark.x
+      cy = landmark.y
+      hand_landmarks_dict[ids] = (cx, cy)
+
+  return hand_landmarks_dict
+
 with mp_hands.Hands(
     model_complexity=0,
     min_detection_confidence=0.5,
@@ -33,38 +60,58 @@ with mp_hands.Hands(
     image.flags.writeable = True
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
+    # contains right or left side + prediction score
+    # only scope >0.5 are valid points
     r_handedness     = results.multi_handedness
+    # contains coordinates (all points are always valid if only one of them is valid
+    #                      so those have to be treaten)
     r_hand_landmarks = results.multi_hand_landmarks
 
-    # Use results
-    if results.multi_handedness:
-        # check that point exists
-        for handedness in results.multi_handedness:
-            for ids, landmrk in enumerate(handedness.landmark):
-            hand_side = results.multi_handedness[ids].classification[0].label
-            cx, cy = landmrk.x * image_width, landmrk.y*image_height
-            if (handedness.classification[0].)
+    # Use hand points and predictions
+    # if there are results
+    # the ids are respect to which hand we have
+    #if r_handedness:
+    #  for ids, handedness in enumerate(r_handedness):
+    #    label = handedness.classification[0].label
+    #    #score = handedness.classification[0].score
+    #    index = handedness.classification[0].index
+    #    print (index, label)
 
+    # Write marks
+    num_hand = get_num_hand(results)
+    #print(num_hand)
 
-        #for hand_landmarks in results.multi_hand_landmarks:
-        # Index
-        # Here is How to Get All the Coordinates
-        for ids, landmrk in enumerate(hand_landmarks.landmark):
-            cx, cy = landmrk.x * image_width, landmrk.y*image_height
-            #hand_side = results.multi_handedness[ids].classification[0].label
-            print (ids, cx, cy)
-        mp_drawing.draw_landmarks(
-            image,
-            hand_landmarks,
-            mp_hands.HAND_CONNECTIONS,
-            mp_drawing_styles.get_default_hand_landmarks_style(),
-            mp_drawing_styles.get_default_hand_connections_style())
+    hand_id = 0
+    hand_label = get_hand_label(results, hand_id)
+    #print(hand_label)
+
+    hand_landmarks = get_hand_landmarks(results, hand_id)
+    print(hand_landmarks)
+
+    #  for i in range(len(r_hand_landmarks)):
+    #    # Index
+    #    # Here is How to Get All the Coordinates
+    #    for ids, landmrk in enumerate(i.landmark):
+    #        cx, cy = landmrk.x * image_width, landmrk.y*image_height
+    #        hand_id = i
+    #        #hand_side = results.multi_handedness[ids].classification[0].label
+    #      #  print (ids, cx, cy)
+
+    if r_hand_landmarks:
+      for hand_landmarks in r_hand_landmarks:
+          mp_drawing.draw_landmarks(
+              image,
+              hand_landmarks,
+              mp_hands.HAND_CONNECTIONS,
+              mp_drawing_styles.get_default_hand_landmarks_style(),
+              mp_drawing_styles.get_default_hand_connections_style())
 
     # Flip the image horizontally for a selfie-view display.
     cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
       break
+
 cap.release()
 
 # Destroy all the windows 
