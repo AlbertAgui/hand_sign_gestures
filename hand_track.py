@@ -59,7 +59,6 @@ def get_hand_landmarks(results, hand_id):
       cx = landmark.x
       cy = landmark.y
       hand_landmarks_dict[ids] = (cx, cy)
-
   return hand_landmarks_dict
 
 def get_multi_hand_landmarks(results):
@@ -69,6 +68,47 @@ def get_multi_hand_landmarks(results):
   for i in range(num_hand):
     hands_landmarks_dict[i] = get_hand_landmarks(results, i)
   return hands_landmarks_dict
+
+#This method uses normalized coordinates
+#coordinate[0] is like coordinate.x
+#coordinate[1] is like coordinate.y
+def is_correct_point(results, hand_id, point):
+  is_correct = 0
+  coordinate = get_hand_point_landmark(results, hand_id, point)
+  if ((coordinate != ("not_found", "not_found")) and 
+     ((coordinate[0] >= 0 and coordinate[0] <= 1) and
+      (coordinate[1] >= 0 and coordinate[1] <= 1))):
+    is_correct = 1
+  return is_correct
+
+#This method checks the positon of point1 with respect to point2
+#coordinate[0] is like coordinate.x
+#coordinate[1] is like coordinate.y
+#Operations supported:
+#"Left"
+#"Right"
+#"Top"
+#"Down"
+def is_point_at(results, hand_id, point1, point2, operation):
+  is_at = 0
+  if (is_correct_point(results, hand_id, point1) and 
+      is_correct_point(results, hand_id, point2)):
+    coordinate1 = get_hand_point_landmark(results, hand_id, point1)
+    coordinate2 = get_hand_point_landmark(results, hand_id, point2)
+    if operation == "Left":
+      if (coordinate1[0] > coordinate2[0]):
+        is_at = 1
+    elif operation == "Right":
+      if (coordinate1[0] > coordinate2[0]):
+        is_at = 1
+    if operation == "Top":
+      if (coordinate1[1] < coordinate2[1]):
+        is_at = 1
+    elif operation == "Down":
+      if (coordinate1[1] > coordinate2[1]):
+        is_at = 1
+  return is_at
+    
 
 def working_frame():
   global frames
@@ -110,22 +150,11 @@ with mp_hands.Hands(
     ###########################
 
     if working_frame():
-      print(get_hand_point_landmark(results, 0, 4))
-
-      #print(get_multi_hand_landmarks(results))
-
-      ## Write marks
-      #num_hand = get_num_hand(results)
-      ##print(num_hand)
-  #
-      #hand_ids = {}
-  #
-      #hand_id = 0
-      #hand_label = get_hand_label(results, hand_id)
-      #print(hand_label)
-  #
-      #hand_landmarks = get_hand_landmarks(results, hand_id)
-      ##print(hand_landmarks)
+      multi_hand_label = get_multi_hand_label(results)
+      for hand_id, label in multi_hand_label.items():
+        if (label == "Right"):
+          if(is_point_at(results, hand_id, 4, 8, "Left")):
+            print("On right hand, thumb is on the left of index finger")
 
     #END PREDICTION CODE
     ###########################
