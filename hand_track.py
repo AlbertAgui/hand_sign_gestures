@@ -32,21 +32,10 @@ with mp_hands.Hands(
     # Draw the hand annotations on the image.
     image.flags.writeable = True
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
-    r_handedness     = results.multi_handedness
-    r_hand_landmarks = results.multi_hand_landmarks
-
-    # Use results
-    if results.multi_handedness:
-        # check that point exists
-        for handedness in results.multi_handedness:
-            for ids, landmrk in enumerate(handedness.landmark):
-            hand_side = results.multi_handedness[ids].classification[0].label
-            cx, cy = landmrk.x * image_width, landmrk.y*image_height
-            if (handedness.classification[0].)
-
-
-        #for hand_landmarks in results.multi_hand_landmarks:
+    # it just checks if there are hand marks
+    if results.multi_hand_landmarks:
+      
+      for hand_landmarks in results.multi_hand_landmarks:
         # Index
         # Here is How to Get All the Coordinates
         for ids, landmrk in enumerate(hand_landmarks.landmark):
