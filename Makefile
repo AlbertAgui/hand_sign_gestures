@@ -10,6 +10,7 @@ help:
 install:
 	pip install opencv-python
 	pip install mediapipe
+	pip install tqdm
 
 git_help:
 	@echo " This is a basic set of git instructions usefull to manage the UVM repository"

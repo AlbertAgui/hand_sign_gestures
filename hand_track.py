@@ -9,16 +9,27 @@ mp_hands = mp.solutions.hands
 
 cap = cv2.VideoCapture(0)
 
-frames = 0
+#This frames are used for workig frames
+w_frames = 0
+working_rate = 20
+#This frames are used for tracking hands progress
+t_frames = 0
+#contain the number of frames needed to track a hand
+max_track_frames = 100
+#contain the current tracked letters
+letters = ""
+# Font settings
+font = cv2.FONT_HERSHEY_DUPLEX
+font_scale = 1.5
+font_thickness = 2
+font_color = (255, 255, 255)  # White color
+
 lock1 = lock2 = lock3 = lock4 = lock5 = 0
 
 
-#CONFIG
-#########
-working_rate = 20
 # Create a named window and set its size
-#cv2.namedWindow('MediaPipe Hands', cv2.WINDOW_NORMAL)
-#cv2.resizeWindow('MediaPipe Hands', 1920, 1080)  # You can adjust the size as needed
+cv2.namedWindow('MediaPipe Hands', cv2.WINDOW_NORMAL)
+cv2.resizeWindow('MediaPipe Hands', 1920, 1080)  # You can adjust the size as needed
 
 def get_num_hand(results):
   output = 0
@@ -120,17 +131,15 @@ def is_point_at(results, hand_id, point1, point2, operation):
     
 
 def working_frame():
-  global frames
+  global w_frames
   work = 0
-  if(frames == (working_rate-1)):
-    frames = 0
+  if(w_frames == (working_rate-1)):
+    w_frames = 0
   else:
-    if (frames == 0):
+    if (w_frames == 0):
       work = 1
-    frames = frames + 1
+    w_frames = w_frames + 1
   return work
-
-#def check_point
 
 def detect_hello(label,lock1,lock2,lock3,lock4,lock5,progress_bar):
             if lock1 == 0:
@@ -283,8 +292,6 @@ def letter_H(results,hand_id):
      print("The letter represented is H") 
   return H_letter
 
-
-
 def letter_L(results,hand_id):
   L_letter=0
   if(is_point_at(results,hand_id,8,7,"Top") and is_point_at(results,hand_id,6,5,"Top")
@@ -311,6 +318,78 @@ def letter_O(results,hand_id):
      O_letter=1
   return O_letter
 
+#get letters
+def logic_get_letter(results,hand_id):
+  if letter_A(results,hand_id):
+    return "A"
+  if letter_B(results,hand_id):
+    return "B"
+  if letter_C(results,hand_id):
+    return "C"
+  if letter_D(results,hand_id):
+    return "D"
+  return ""
+
+def get_letter(results,hand_id):
+  global letters
+  letter = logic_get_letter(results,hand_id)
+  letters = letters + letter
+
+#updates track progress frames and return if it is a track frame
+def track_progress():
+  global t_frames
+  track = 0
+  if(t_frames == (max_track_frames-1)):
+    t_frames = 0
+  else:
+    if (t_frames == 0):
+      track = 1
+    t_frames = t_frames + 1
+  return track
+
+#DRAW INTERFACE
+def draw_if(image):
+  draw_background_progress_bar(image)
+  draw_progress_bar(image)
+  draw_word(image)
+
+def draw_background_progress_bar(image):
+  # Define bar parameters
+  bar_width = int(image.shape[1] * 0.8)
+  bar_height = int(image.shape[0] * 0.05)
+  bar_x = int((image.shape[1] - bar_width) / 2)
+  bar_y = int(image.shape[0] - bar_height - 10)
+  # Draw background bar
+  cv2.rectangle(image, (bar_x, bar_y), (bar_x + bar_width, bar_y + bar_height), (50, 50, 50), -1)
+
+def draw_progress_bar(image):
+  # Define bar parameters
+  bar_width = int(image.shape[1] * 0.8)
+  bar_height = int(image.shape[0] * 0.05)
+  bar_x = int((image.shape[1] - bar_width) / 2)
+  bar_y = int(image.shape[0] - bar_height - 10)
+  progress = min(t_frames / max_track_frames, 1)
+  filled_width = int(bar_width * progress)
+  # Draw progress bar
+  cv2.rectangle(image, (bar_x, bar_y), (bar_x + filled_width, bar_y + bar_height), (204, 204, 0), -1)
+
+def draw_word(image):
+  global letters
+  if len(letters) > 0:
+    # Get the size of the text
+    (text_width, text_height), baseline = cv2.getTextSize(letters, font, font_scale, font_thickness)
+
+    # Calculate the position to center the text
+    text_x = (image.shape[1] - text_width) // 2
+    text_y = text_height + 20  # Adjust the vertical position as needed
+    # Draw text background bar
+    text_background_bar_y = text_y - text_height - 10
+    cv2.rectangle(image, (text_x - 10, text_background_bar_y), (text_x + text_width + 10, text_background_bar_y + text_height + baseline + 10), (0, 0, 0), -1)
+
+    # Draw the word on the image
+    cv2.putText(image, letters, (text_x, text_y), font, font_scale, font_color, font_thickness, lineType=cv2.LINE_AA)
+
+
 with mp_hands.Hands(
     model_complexity=0,
     min_detection_confidence=0.5,
@@ -335,92 +414,6 @@ with mp_hands.Hands(
     image.flags.writeable = True
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-    #PREDICTION CODE
-    ###########################
-    
-    if working_frame():
-      multi_hand_label = get_multi_hand_label(results)
-      for hand_id, label in multi_hand_label.items():
-        if label == "Right":
-            if lock1 == 0:
-                L1 = letter_H(results, hand_id)
-                if L1 == 1:
-                    lock1 = 1
-                    progress_bar.update(1)
-
-            if lock1 == 1 and lock2 == 0:
-                L2 = letter_E(results, hand_id)
-                if L2 == 1:
-                    lock2 = 1
-                    progress_bar.update(1)
-
-            if lock2 == 1 and lock3 == 0:
-                L3 = letter_L(results, hand_id)
-                if L3 == 1:
-                    lock3 = 1
-                    progress_bar.update(1)
-                    lock2 = 0  # Reset lock2 after updating the progress bar
-
-            if lock3 == 1 and lock4 == 0:
-                L4 = letter_L(results, hand_id)
-                if L4 == 1:
-                    lock4 = 1
-                    progress_bar.update(1)
-                    lock3 = 0  # Reset lock3 after updating the progress bar
-
-            if lock4 == 1 and lock5 == 0:
-                L5 = letter_O(results, hand_id)
-                if L5 == 1:
-                    lock5 = 1
-                    progress_bar.update(1)
-                    lock4 = 0  # Reset lock4 after updating the progress bar
-
-            if lock5 == 1:
-                print("Hello word complete!")
-                progress_bar.n = 0
-                progress_bar.last_print_n = 0
-                progress_bar.refresh()
-                lock1 = lock2 = lock3 = lock4 = lock5 = 0
-                sleep(4)
-            
-            #Just to test if the letters are well printed
-            #letter_A(results, hand_id)
-            #letter_B(results, hand_id)
-            #letter_C(results, hand_id)
-            #letter_D(results, hand_id)
-            #letter_E(results, hand_id)
-            letter_F(results, hand_id)
-            #letter_G(results, hand_id)
-            #letter_H(results, hand_id)            
-            #letter_I(results, hand_id)
-            #letter_J(results, hand_id)                        
-            #letter_L(results, hand_id)
-            #letter_M(results, hand_id)
-            #letter_N(results, hand_id)
-            #letter_O(results, hand_id)
-
-#Attemtives to make it simplier
-        #detect_hello(label,lock1,lock2,lock3,lock4,lock5)
-        #letter_E(results, hand_id)   
-          #L1 = letter_H(results, hand_id)
-          #L2 = letter_E(results, hand_id)
-          #L3 = letter_L(results, hand_id)
-          #L4 = letter_L(results, hand_id)
-          #L5 = letter_O(results, hand_id)
-          #arr_hello=array.array('i',[L1,L2,L3,L4,L5])
-          #progress_bar(arr_hello)
-          
-
-          #letter_H()
-          #if(is_point_at(results, hand_id, 4, 8, "Left")):
-            #print("On right hand, thumb is on the left of index finger")
-          #if(is_point_at(results,hand_id,8,0,"Top")):
-            #print("thumb is above the wrist") 
-
-
-    #END PREDICTION CODE
-    ###########################
-
     if results.multi_hand_landmarks:
       for hand_landmarks in results.multi_hand_landmarks:
           mp_drawing.draw_landmarks(
@@ -431,7 +424,28 @@ with mp_hands.Hands(
               mp_drawing_styles.get_default_hand_connections_style())
 
     # Flip the image horizontally for a selfie-view display.
-    cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
+    image = cv2.flip(image, 1)
+
+    #PREDICTION CODE
+    ###########################
+    #if working_frame():
+
+    #add letters to draw
+    is_track = track_progress()
+    if(is_track):
+      multi_hand_label = get_multi_hand_label(results)
+      for hand_id, label in multi_hand_label.items():
+        if label == "Right":
+          get_letter(results, hand_id)
+    
+    # Add GUI
+    draw_if(image)
+
+    #END PREDICTION CODE
+    ###########################
+
+    # Draw image
+    cv2.imshow('MediaPipe Hands', image)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
       break
