@@ -1,5 +1,8 @@
 import cv2
 import mediapipe as mp
+from tqdm import tqdm
+import array
+from time import sleep
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
@@ -7,10 +10,12 @@ mp_hands = mp.solutions.hands
 cap = cv2.VideoCapture(0)
 
 frames = 0
+lock1 = lock2 = lock3 = lock4 = lock5 = 0
+
 
 #CONFIG
 #########
-working_rate = 3
+working_rate = 20
 # Create a named window and set its size
 #cv2.namedWindow('MediaPipe Hands', cv2.WINDOW_NORMAL)
 #cv2.resizeWindow('MediaPipe Hands', 1920, 1080)  # You can adjust the size as needed
@@ -50,6 +55,7 @@ def get_hand_point_landmark(results, hand_id, point):
   return coordinate
 
 #return dict accessed by landmark id
+#it returns the points x and y respectively to each ids that ranges from [0..21]
 def get_hand_landmarks(results, hand_id):
   hand_landmarks_dict = {}
 
@@ -60,6 +66,7 @@ def get_hand_landmarks(results, hand_id):
       cy = landmark.y
       hand_landmarks_dict[ids] = (cx, cy)
   return hand_landmarks_dict
+
 
 def get_multi_hand_landmarks(results):
   hands_landmarks_dict = {}
@@ -75,6 +82,7 @@ def get_multi_hand_landmarks(results):
 def is_correct_point(results, hand_id, point):
   is_correct = 0
   coordinate = get_hand_point_landmark(results, hand_id, point)
+
   if ((coordinate != ("not_found", "not_found")) and 
      ((coordinate[0] >= 0 and coordinate[0] <= 1) and
       (coordinate[1] >= 0 and coordinate[1] <= 1))):
@@ -89,6 +97,7 @@ def is_correct_point(results, hand_id, point):
 #"Right"
 #"Top"
 #"Down"
+#it is used to examine the position of the point 1 relative to point 0 of the hand for both x and y
 def is_point_at(results, hand_id, point1, point2, operation):
   is_at = 0
   if (is_correct_point(results, hand_id, point1) and 
@@ -123,10 +132,190 @@ def working_frame():
 
 #def check_point
 
+def detect_hello(label,lock1,lock2,lock3,lock4,lock5,progress_bar):
+            if lock1 == 0:
+                L1 = letter_H(results, hand_id)
+                if L1 == 1:
+                    lock1 = 1
+                    progress_bar.update(1)
+
+            if lock1 == 1 and lock2 == 0:
+                L2 = letter_E(results, hand_id)
+                if L2 == 1:
+                    lock2 = 1
+                    progress_bar.update(1)
+
+            if lock2 == 1 and lock3 == 0:
+                L3 = letter_L(results, hand_id)
+                if L3 == 1:
+                    lock3 = 1
+                    progress_bar.update(1)
+                    lock2 = 0  # Reset lock2 after updating the progress bar
+
+            if lock3 == 1 and lock4 == 0:
+                L4 = letter_L(results, hand_id)
+                if L4 == 1:
+                    lock4 = 1
+                    progress_bar.update(1)
+                    lock3 = 0  # Reset lock3 after updating the progress bar
+
+            if lock4 == 1 and lock5 == 0:
+                L5 = letter_O(results, hand_id)
+                if L5 == 1:
+                    lock5 = 1
+                    progress_bar.update(1)
+                    lock4 = 0  # Reset lock4 after updating the progress bar
+
+            if lock5 == 1:
+                print("Hello word complete!")
+                progress_bar.n = 0
+                progress_bar.last_print_n = 0
+                progress_bar.refresh()
+                lock1 = lock2 = lock3 = lock4 = lock5 = 0
+                sleep(4)
+
+
+
+
+def progress_bar(any_array):
+  lock = array.array('i', [0] * len(any_array))
+  with Bar('HELLO',max=5) as bar:
+    for i in range(len(any_array)):
+      if any_array[i] == 1:
+        lock[i]=1
+        if lock[i-1] == 1:
+         bar.next()
+    if lock[len(any_array)-1] == 1:
+      print("HELLO WORD WAS DETECTED!!!!")
+      lock = array.array('i', [0] * len(any_array))
+
+
+def letter_A(results,hand_id):
+  A_letter=0
+  if(is_point_at(results,hand_id,7,8,"Top") and is_point_at(results,hand_id,11,12,"Top")
+  and is_point_at(results,hand_id,15,16,"Top")and is_point_at(results,hand_id,19,20,"Top")
+  and is_point_at(results,hand_id,4,8,"Top")and is_point_at(results,hand_id,4,3,"Top")
+  and is_point_at(results,hand_id,2,1,"Top")):
+   if(is_point_at(results,hand_id,4,8,"Left") and is_point_at(results,hand_id,3,7,"Left")
+   and is_point_at(results,hand_id,2,6,"Left")and is_point_at(results,hand_id,2,5,"Left")):
+     A_letter=1
+     print("The letter represented is A") 
+  return A_letter
+
+def letter_B(results,hand_id):
+  B_letter=0
+  if(is_point_at(results,hand_id,8,7,"Top") and is_point_at(results,hand_id,12,11,"Top")
+  and is_point_at(results,hand_id,16,15,"Top")and is_point_at(results,hand_id,20,19,"Top")
+  and is_point_at(results,hand_id,12,16,"Top")and is_point_at(results,hand_id,16,8,"Top")
+  and is_point_at(results,hand_id,8,20,"Top")and is_point_at(results,hand_id,7,10,"Top")
+  and is_point_at(results,hand_id,7,14,"Top")and is_point_at(results,hand_id,7,18,"Top")):
+   if(is_point_at(results,hand_id,3,9,"Left") and is_point_at(results,hand_id,1,4,"Left")):
+   
+     B_letter=1
+     print("The letter represented is B") 
+  return B_letter 
+
+
+def letter_C(results,hand_id):
+  C_letter=0
+  if(is_point_at(results,hand_id,12,8,"Top") and is_point_at(results,hand_id,11,7,"Top")
+  and is_point_at(results,hand_id,5,4,"Top")and is_point_at(results,hand_id,4,3,"Top")):
+   if(is_point_at(results,hand_id,1,2,"Left") and is_point_at(results,hand_id,2,3,"Left")
+   and is_point_at(results,hand_id,7,8,"Left")and is_point_at(results,hand_id,0,1,"Left")
+   and is_point_at(results,hand_id,6,7,"Left")and is_point_at(results,hand_id,5,6,"Left")
+   and is_point_at(results,hand_id,10,11,"Left")and is_point_at(results,hand_id,0,5,"Left")
+   and is_point_at(results,hand_id,0,9,"Left")):
+     C_letter=1
+     print("The letter represented is C") 
+  return C_letter 
+  
+def letter_D(results,hand_id):
+  D_letter=0
+  if(is_point_at(results,hand_id,11,12,"Top") and is_point_at(results,hand_id,15,16,"Top")
+  and is_point_at(results,hand_id,19,20,"Top")and is_point_at(results,hand_id,8,7,"Top")
+  and is_point_at(results,hand_id,7,6,"Top")and is_point_at(results,hand_id,6,4,"Top")
+  and is_point_at(results,hand_id,11,4,"Top")and is_point_at(results,hand_id,15,4,"Top")
+  and is_point_at(results,hand_id,3,2,"Top")and is_point_at(results,hand_id,2,1,"Top")
+  and is_point_at(results,hand_id,1,0,"Top")and is_point_at(results,hand_id,5,4,"Top")):
+   if(is_point_at(results,hand_id,3,4,"Left") and is_point_at(results,hand_id,5,9,"Left")
+   and is_point_at(results,hand_id,9,13,"Left")and is_point_at(results,hand_id,13,17,"Left")):
+     D_letter=1
+     print("The letter represented is D") 
+  return D_letter
+
+
+def letter_E(results,hand_id):
+  E_letter=0
+  if(is_point_at(results,hand_id,7,8,"Top") and is_point_at(results,hand_id,11,12,"Top")
+  and is_point_at(results,hand_id,15,16,"Top")and is_point_at(results,hand_id,19,20,"Top")
+  and is_point_at(results,hand_id,8,4,"Top")and is_point_at(results,hand_id,12,4,"Top")
+  and is_point_at(results,hand_id,16,4,"Top")and is_point_at(results,hand_id,20,4,"Top")):
+   if(is_point_at(results,hand_id,8,4,"Left") and is_point_at(results,hand_id,4,20,"Left")):
+     print("The letter represented is E") 
+     E_letter=1
+  return E_letter
+
+def letter_F(results,hand_id):
+  F_letter=0
+  if(is_point_at(results,hand_id,12,16,"Top") and is_point_at(results,hand_id,16,20,"Top")
+  and is_point_at(results,hand_id,18,8,"Top")and is_point_at(results,hand_id,4,3,"Top")
+  and is_point_at(results,hand_id,3,2,"Top")and is_point_at(results,hand_id,2,1,"Top")
+  and is_point_at(results,hand_id,4,8,"Top")and is_point_at(results,hand_id,4,5,"Top")
+  and is_point_at(results,hand_id,11,7,"Top")and is_point_at(results,hand_id,7,8,"Top")
+  and is_point_at(results,hand_id,12,11,"Top")and is_point_at(results,hand_id,16,15,"Top")
+  and is_point_at(results,hand_id,20,19,"Top") ):
+   if(is_point_at(results,hand_id,4,7,"Left") and is_point_at(results,hand_id,3,8,"Left")
+   and is_point_at(results,hand_id,8,9,"Left")and is_point_at(results,hand_id,12,16,"Left")
+   and is_point_at(results,hand_id,16,20,"Left")and is_point_at(results,hand_id,8,12,"Left")):
+     F_letter=1
+     print("The letter represented is F") 
+  return F_letter
+
+
+def letter_H(results,hand_id):
+  H_letter=0
+  if(is_point_at(results,hand_id,8,12,"Top") and is_point_at(results,hand_id,7,11,"Top")
+  and is_point_at(results,hand_id,16,20,"Top")and is_point_at(results,hand_id,4,16,"Top")
+  and is_point_at(results,hand_id,5,9,"Top")and is_point_at(results,hand_id,20,0,"Top")):
+   if(is_point_at(results,hand_id,0,5,"Left") and is_point_at(results,hand_id,0,9,"Left")
+   and is_point_at(results,hand_id,0,20,"Left")and is_point_at(results,hand_id,0,16,"Left")):
+     H_letter=1
+     print("The letter represented is H") 
+  return H_letter
+
+
+
+def letter_L(results,hand_id):
+  L_letter=0
+  if(is_point_at(results,hand_id,8,7,"Top") and is_point_at(results,hand_id,6,5,"Top")
+  and is_point_at(results,hand_id,4,3,"Top")and is_point_at(results,hand_id,2,1,"Top")
+  and is_point_at(results,hand_id,1,0,"Top")and is_point_at(results,hand_id,11,12,"Top")
+  and is_point_at(results,hand_id,15,16,"Top")and is_point_at(results,hand_id,19,20,"Top")):
+   if(is_point_at(results,hand_id,5,9,"Left") and is_point_at(results,hand_id,9,13,"Left")
+    and is_point_at(results,hand_id,13,17,"Left")and is_point_at(results,hand_id,1,5,"Left")):
+     L_letter=1
+     print("The letter represented is L")
+
+  return L_letter
+
+def letter_O(results,hand_id):
+  O_letter=0
+  if(is_point_at(results,hand_id,7,8,"Top") and is_point_at(results,hand_id,7,4,"Top")
+  and is_point_at(results,hand_id,6,7,"Top")and is_point_at(results,hand_id,5,0,"Top")
+  and is_point_at(results,hand_id,1,0,"Top")and is_point_at(results,hand_id,4,3,"Top")
+  and is_point_at(results,hand_id,3,2,"Top")and is_point_at(results,hand_id,1,0,"Top")):
+   if(is_point_at(results,hand_id,5,6,"Left") and is_point_at(results,hand_id,6,7,"Left")
+    and is_point_at(results,hand_id,7,8,"Left")and is_point_at(results,hand_id,8,4,"Left")
+    and is_point_at(results,hand_id,0,1,"Left")):
+     print("The letter represented is O") 
+     O_letter=1
+  return O_letter
+
 with mp_hands.Hands(
     model_complexity=0,
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as hands:
+  progress_bar = tqdm(total=5, desc='HELLO', position=0, leave=True)
   while cap.isOpened():
     success, image = cap.read()
     if not success:
@@ -148,13 +337,86 @@ with mp_hands.Hands(
 
     #PREDICTION CODE
     ###########################
-
+    
     if working_frame():
       multi_hand_label = get_multi_hand_label(results)
       for hand_id, label in multi_hand_label.items():
-        if (label == "Right"):
-          if(is_point_at(results, hand_id, 4, 8, "Left")):
-            print("On right hand, thumb is on the left of index finger")
+        if label == "Right":
+            if lock1 == 0:
+                L1 = letter_H(results, hand_id)
+                if L1 == 1:
+                    lock1 = 1
+                    progress_bar.update(1)
+
+            if lock1 == 1 and lock2 == 0:
+                L2 = letter_E(results, hand_id)
+                if L2 == 1:
+                    lock2 = 1
+                    progress_bar.update(1)
+
+            if lock2 == 1 and lock3 == 0:
+                L3 = letter_L(results, hand_id)
+                if L3 == 1:
+                    lock3 = 1
+                    progress_bar.update(1)
+                    lock2 = 0  # Reset lock2 after updating the progress bar
+
+            if lock3 == 1 and lock4 == 0:
+                L4 = letter_L(results, hand_id)
+                if L4 == 1:
+                    lock4 = 1
+                    progress_bar.update(1)
+                    lock3 = 0  # Reset lock3 after updating the progress bar
+
+            if lock4 == 1 and lock5 == 0:
+                L5 = letter_O(results, hand_id)
+                if L5 == 1:
+                    lock5 = 1
+                    progress_bar.update(1)
+                    lock4 = 0  # Reset lock4 after updating the progress bar
+
+            if lock5 == 1:
+                print("Hello word complete!")
+                progress_bar.n = 0
+                progress_bar.last_print_n = 0
+                progress_bar.refresh()
+                lock1 = lock2 = lock3 = lock4 = lock5 = 0
+                sleep(4)
+            
+            #Just to test if the letters are well printed
+            #letter_A(results, hand_id)
+            #letter_B(results, hand_id)
+            #letter_C(results, hand_id)
+            #letter_D(results, hand_id)
+            #letter_E(results, hand_id)
+            letter_F(results, hand_id)
+            #letter_G(results, hand_id)
+            #letter_H(results, hand_id)            
+            #letter_I(results, hand_id)
+            #letter_J(results, hand_id)                        
+            #letter_L(results, hand_id)
+            #letter_M(results, hand_id)
+            #letter_N(results, hand_id)
+            #letter_O(results, hand_id)
+
+#Attemtives to make it simplier
+        #detect_hello(label,lock1,lock2,lock3,lock4,lock5)
+        #letter_E(results, hand_id)   
+          #L1 = letter_H(results, hand_id)
+          #L2 = letter_E(results, hand_id)
+          #L3 = letter_L(results, hand_id)
+          #L4 = letter_L(results, hand_id)
+          #L5 = letter_O(results, hand_id)
+          #arr_hello=array.array('i',[L1,L2,L3,L4,L5])
+          #progress_bar(arr_hello)
+          
+
+          #letter_H()
+          #if(is_point_at(results, hand_id, 4, 8, "Left")):
+            #print("On right hand, thumb is on the left of index finger")
+          #if(is_point_at(results,hand_id,8,0,"Top")):
+            #print("thumb is above the wrist") 
+
 
     #END PREDICTION CODE
     ###########################
