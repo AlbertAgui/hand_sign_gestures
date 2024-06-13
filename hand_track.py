@@ -15,9 +15,11 @@ working_rate = 20
 #This frames are used for tracking hands progress
 t_frames = 0
 #contain the number of frames needed to track a hand
-max_track_frames = 100
+max_track_frames = 50
 #contain the current tracked letters
-letters = ""
+MAX_LETTERS = 8
+letters        = ""
+current_letter = ""
 # Font settings
 font = cv2.FONT_HERSHEY_DUPLEX
 font_scale = 1.5
@@ -318,22 +320,76 @@ def letter_O(results,hand_id):
      O_letter=1
   return O_letter
 
+#OPENED HAND
+def reset_gesture(results,hand_id):
+  found=0
+  #hand, thumb
+  if(is_point_at(results,hand_id,4,3,"Left") and is_point_at(results,hand_id,3,2,"Left")
+  and is_point_at(results,hand_id,1,0,"Left")and is_point_at(results,hand_id,5,0,"Top")
+  and is_point_at(results,hand_id,9,0,"Top")and is_point_at(results,hand_id,13,0,"Top")
+  and is_point_at(results,hand_id,17,0,"Top")and is_point_at(results,hand_id,5,4,"Top")
+  and is_point_at(results,hand_id,4,5,"Left")):
+    #fingers
+    #index
+    if(is_point_at(results,hand_id,8,7,"Top")and is_point_at(results,hand_id,6,5,"Top")
+    and is_point_at(results,hand_id,8,12,"Left")):
+      #middle
+      offset = 4
+      if(is_point_at(results,hand_id,8+offset,7+offset,"Top")and is_point_at(results,hand_id,6+offset,5+offset,"Top")
+      and is_point_at(results,hand_id,8+offset,12+offset,"Left")):
+        #ring
+        offset = 8
+        if(is_point_at(results,hand_id,8+offset,7+offset,"Top")and is_point_at(results,hand_id,6+offset,5+offset,"Top")
+        and is_point_at(results,hand_id,8+offset,12+offset,"Left")):
+          #pinky
+          offset = 12
+          if(is_point_at(results,hand_id,8+offset,7+offset,"Top")and is_point_at(results,hand_id,6+offset,5+offset,"Top")):
+            print("Reset gesture found") 
+            found=1
+  return found
+
 #get letters
 def logic_get_letter(results,hand_id):
+  letter = ""
   if letter_A(results,hand_id):
-    return "A"
+    letter = "A"
   if letter_B(results,hand_id):
-    return "B"
+    letter = "B"
   if letter_C(results,hand_id):
-    return "C"
+    letter = "C"
   if letter_D(results,hand_id):
-    return "D"
-  return ""
+    letter = "D"
+  if letter_E(results,hand_id):
+    letter = "E"
+  if letter_F(results,hand_id):
+    letter = "F"
+  if letter_H(results,hand_id):
+    letter = "H"
+  if letter_L(results,hand_id):
+    letter = "L"
+  if letter_O(results,hand_id):
+    letter = "O"
+  if reset_gesture(results,hand_id):
+    letter = "RESET"
+  return letter
 
-def get_letter(results,hand_id):
+#TODO: TEMP commit
+def get_current_letter(results,hand_id):
+  global current_letter
   global letters
-  letter = logic_get_letter(results,hand_id)
-  letters = letters + letter
+  temp_letter = logic_get_letter(results,hand_id)
+  if ((len(letters) >= MAX_LETTERS) and (len(temp_letter) != 0)):
+    current_letter = "RESET"
+  else:
+    current_letter = temp_letter
+
+def update_letters(results,hand_id):
+  global letters
+  if len(current_letter) > 0:
+    if (current_letter == "RESET"):
+      letters = ""
+    else:
+      letters = letters + current_letter
 
 #updates track progress frames and return if it is a track frame
 def track_progress():
@@ -352,6 +408,7 @@ def draw_if(image):
   draw_background_progress_bar(image)
   draw_progress_bar(image)
   draw_word(image)
+  draw_current_letter(image)
 
 def draw_background_progress_bar(image):
   # Define bar parameters
@@ -389,12 +446,27 @@ def draw_word(image):
     # Draw the word on the image
     cv2.putText(image, letters, (text_x, text_y), font, font_scale, font_color, font_thickness, lineType=cv2.LINE_AA)
 
+def draw_current_letter(image):
+  if len(current_letter) > 0:
+    # Get the size of the text
+    (text_width, text_height), baseline = cv2.getTextSize(current_letter, font, font_scale, font_thickness)
+
+    # Calculate the position to center the text
+    margin = 20
+    text_x = image.shape[1] - text_width - margin
+    text_y = text_height + margin  # Adjust the vertical position as needed
+    # Draw text background bar
+    text_background_bar_y = text_y - text_height - 10
+    cv2.rectangle(image, (text_x - 10, text_background_bar_y), (text_x + text_width + 10, text_background_bar_y + text_height + baseline + 10), (204, 204, 0), -1)
+
+    # Draw the word on the image
+    cv2.putText(image, current_letter, (text_x, text_y), font, font_scale, font_color, font_thickness, lineType=cv2.LINE_AA)
+
 
 with mp_hands.Hands(
     model_complexity=0,
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as hands:
-  progress_bar = tqdm(total=5, desc='HELLO', position=0, leave=True)
   while cap.isOpened():
     success, image = cap.read()
     if not success:
@@ -431,12 +503,16 @@ with mp_hands.Hands(
     #if working_frame():
 
     #add letters to draw
+    multi_hand_label = get_multi_hand_label(results)
+    for hand_id, label in multi_hand_label.items():
+        if label == "Right":
+          get_current_letter(results, hand_id)
+
     is_track = track_progress()
     if(is_track):
-      multi_hand_label = get_multi_hand_label(results)
       for hand_id, label in multi_hand_label.items():
         if label == "Right":
-          get_letter(results, hand_id)
+          update_letters(results, hand_id)
     
     # Add GUI
     draw_if(image)
