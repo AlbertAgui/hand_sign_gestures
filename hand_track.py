@@ -10,8 +10,10 @@ mp_hands = mp.solutions.hands
 cap = cv2.VideoCapture(0)
 
 #This frames are used for workig frames
-w_frames = 0
-working_rate = 20
+"""w_frames = 0
+working_rate = 20"""
+
+#Tracking
 #This frames are used for tracking hands progress
 t_frames = 0
 #contain the number of frames needed to track a hand
@@ -20,35 +22,40 @@ max_track_frames = 50
 MAX_LETTERS = 8
 letters        = ""
 current_letter = ""
+
 # Font settings
 font = cv2.FONT_HERSHEY_DUPLEX
 font_scale = 1.5
-font_thickness = 2
+font_thickness = 3
 font_color = (255, 255, 255)  # White color
 
-lock1 = lock2 = lock3 = lock4 = lock5 = 0
-
+# Test hello
+"""lock1 = lock2 = lock3 = lock4 = lock5 = 0"""
 
 # Create a named window and set its size
 cv2.namedWindow('MediaPipe Hands', cv2.WINDOW_NORMAL)
 cv2.resizeWindow('MediaPipe Hands', 1920, 1080)  # You can adjust the size as needed
 
+# get number of hands found
 def get_num_hand(results):
   output = 0
   r_hand_landmarks = results.multi_hand_landmarks
+  #if result landmarks valid
   if r_hand_landmarks:
     return len(r_hand_landmarks)
   return output
 
-# is it a right or left hand?
+# get hand label(right or left) for a certain hand_id
 def get_hand_label(results, hand_id):
   label = "not found"
   num_hand = get_num_hand(results)
+  #check if the hand_id exists
   if((hand_id < num_hand) and (hand_id >= 0)):
     #as the image is fliped, the label have to be inverted too
     label = "Left" if results.multi_handedness[hand_id].classification[0].label == "Right" else "Right"
   return label
 
+# get hand label(right or left) of all hands
 def get_multi_hand_label(results):
   labels = {}
   num_hand = get_num_hand(results)
@@ -56,23 +63,26 @@ def get_multi_hand_label(results):
     labels[i] = (get_hand_label(results,i))
   return labels
 
+# get hand point coordinates
 def get_hand_point_landmark(results, hand_id, point):
   coordinate = ("not_found", "not_found")
 
   num_hand = get_num_hand(results)
+  #check if the hand_id and point are valid
   if (((hand_id < num_hand) and (hand_id >= 0)) and ((point < 21) and (point >= 0))):
-      landmark = results.multi_hand_landmarks[hand_id].landmark[point]
-      cx = landmark.x
-      cy = landmark.y
-      coordinate = (cx,cy)
+    landmark = results.multi_hand_landmarks[hand_id].landmark[point]
+    cx = landmark.x
+    cy = landmark.y
+    coordinate = (cx,cy)
   return coordinate
 
-#return dict accessed by landmark id
-#it returns the points x and y respectively to each ids that ranges from [0..21]
+# get all hand point coordinates of hand_id hand
+# return dict accessed by point id
 def get_hand_landmarks(results, hand_id):
   hand_landmarks_dict = {}
 
   num_hand = get_num_hand(results)
+  #check hand_id range
   if((hand_id < num_hand) and (hand_id >= 0)):
     for ids, landmark in enumerate(results.multi_hand_landmarks[hand_id].landmark):
       cx = landmark.x
@@ -80,7 +90,7 @@ def get_hand_landmarks(results, hand_id):
       hand_landmarks_dict[ids] = (cx, cy)
   return hand_landmarks_dict
 
-
+# get all hand point coordinates of all hands
 def get_multi_hand_landmarks(results):
   hands_landmarks_dict = {}
 
@@ -131,7 +141,7 @@ def is_point_at(results, hand_id, point1, point2, operation):
         is_at = 1
   return is_at
     
-
+"""
 def working_frame():
   global w_frames
   work = 0
@@ -185,9 +195,6 @@ def detect_hello(label,lock1,lock2,lock3,lock4,lock5,progress_bar):
                 lock1 = lock2 = lock3 = lock4 = lock5 = 0
                 sleep(4)
 
-
-
-
 def progress_bar(any_array):
   lock = array.array('i', [0] * len(any_array))
   with Bar('HELLO',max=5) as bar:
@@ -199,7 +206,7 @@ def progress_bar(any_array):
     if lock[len(any_array)-1] == 1:
       print("HELLO WORD WAS DETECTED!!!!")
       lock = array.array('i', [0] * len(any_array))
-
+"""
 
 def letter_A(results,hand_id):
   A_letter=0
@@ -374,16 +381,20 @@ def logic_get_letter(results,hand_id):
   return letter
 
 #TODO: TEMP commit
-def get_current_letter(results,hand_id):
+def get_current_letter(results):
   global current_letter
   global letters
-  temp_letter = logic_get_letter(results,hand_id)
-  if ((len(letters) >= MAX_LETTERS) and (len(temp_letter) != 0)):
-    current_letter = "RESET"
-  else:
-    current_letter = temp_letter
+  current_letter = ""
+  multi_hand_label = get_multi_hand_label(results)
+  for hand_id, label in multi_hand_label.items():
+      if label == "Right":
+        temp_letter = logic_get_letter(results,hand_id)
+        if ((len(letters) >= MAX_LETTERS) and (len(temp_letter) != 0)):
+          current_letter = "RESET"
+        else:
+          current_letter = temp_letter
 
-def update_letters(results,hand_id):
+def update_letters():
   global letters
   if len(current_letter) > 0:
     if (current_letter == "RESET"):
@@ -447,6 +458,7 @@ def draw_word(image):
     cv2.putText(image, letters, (text_x, text_y), font, font_scale, font_color, font_thickness, lineType=cv2.LINE_AA)
 
 def draw_current_letter(image):
+  global current_letter
   if len(current_letter) > 0:
     # Get the size of the text
     (text_width, text_height), baseline = cv2.getTextSize(current_letter, font, font_scale, font_thickness)
@@ -465,8 +477,8 @@ def draw_current_letter(image):
 
 with mp_hands.Hands(
     model_complexity=0,
-    min_detection_confidence=0.5,
-    min_tracking_confidence=0.5) as hands:
+    min_detection_confidence=0.6,
+    min_tracking_confidence=0.6) as hands:
   while cap.isOpened():
     success, image = cap.read()
     if not success:
@@ -488,36 +500,30 @@ with mp_hands.Hands(
 
     if results.multi_hand_landmarks:
       for hand_landmarks in results.multi_hand_landmarks:
-          mp_drawing.draw_landmarks(
-              image,
-              hand_landmarks,
-              mp_hands.HAND_CONNECTIONS,
-              mp_drawing_styles.get_default_hand_landmarks_style(),
-              mp_drawing_styles.get_default_hand_connections_style())
+        mp_drawing.draw_landmarks(
+          image,
+          hand_landmarks,
+          mp_hands.HAND_CONNECTIONS,
+          mp_drawing_styles.get_default_hand_landmarks_style(),
+          mp_drawing_styles.get_default_hand_connections_style())
 
     # Flip the image horizontally for a selfie-view display.
     image = cv2.flip(image, 1)
 
-    #PREDICTION CODE
+    #TEST CODE
     ###########################
-    #if working_frame():
-
     #add letters to draw
-    multi_hand_label = get_multi_hand_label(results)
-    for hand_id, label in multi_hand_label.items():
-        if label == "Right":
-          get_current_letter(results, hand_id)
+    get_current_letter(results)
 
-    is_track = track_progress()
-    if(is_track):
-      for hand_id, label in multi_hand_label.items():
-        if label == "Right":
-          update_letters(results, hand_id)
+    #update laters if it is the track frame
+    is_track_frame = track_progress()
+    if(is_track_frame):
+      update_letters()
     
     # Add GUI
     draw_if(image)
 
-    #END PREDICTION CODE
+    #END TEST CODE
     ###########################
 
     # Draw image
