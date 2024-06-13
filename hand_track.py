@@ -380,8 +380,9 @@ def logic_get_letter(results,hand_id):
     letter = "RESET"
   return letter
 
-#TODO: TEMP commit
-def get_current_letter(results):
+# Check current sign gesture in right hand
+# Reset gesture if reset sign or exced max_letters
+def get_current_letter(results, max_letters):
   global current_letter
   global letters
   current_letter = ""
@@ -389,11 +390,13 @@ def get_current_letter(results):
   for hand_id, label in multi_hand_label.items():
       if label == "Right":
         temp_letter = logic_get_letter(results,hand_id)
-        if ((len(letters) >= MAX_LETTERS) and (len(temp_letter) != 0)):
+        if ((len(letters) >= max_letters) and (len(temp_letter) != 0)):
           current_letter = "RESET"
         else:
           current_letter = temp_letter
 
+# Update letters string
+# Reset if "RESET" letter found
 def update_letters():
   global letters
   if len(current_letter) > 0:
@@ -416,10 +419,14 @@ def track_progress():
 
 #DRAW INTERFACE
 def draw_if(image):
-  draw_background_progress_bar(image)
-  draw_progress_bar(image)
+  draw_progress(image)
   draw_word(image)
   draw_current_letter(image)
+
+#draw progress feedback bar
+def draw_progress(image):
+  draw_background_progress_bar(image)
+  draw_progress_bar(image)
 
 def draw_background_progress_bar(image):
   # Define bar parameters
@@ -441,6 +448,7 @@ def draw_progress_bar(image):
   # Draw progress bar
   cv2.rectangle(image, (bar_x, bar_y), (bar_x + filled_width, bar_y + bar_height), (204, 204, 0), -1)
 
+# draw tracked word
 def draw_word(image):
   global letters
   if len(letters) > 0:
@@ -457,6 +465,7 @@ def draw_word(image):
     # Draw the word on the image
     cv2.putText(image, letters, (text_x, text_y), font, font_scale, font_color, font_thickness, lineType=cv2.LINE_AA)
 
+# draw current detected letter in screen
 def draw_current_letter(image):
   global current_letter
   if len(current_letter) > 0:
@@ -474,7 +483,7 @@ def draw_current_letter(image):
     # Draw the word on the image
     cv2.putText(image, current_letter, (text_x, text_y), font, font_scale, font_color, font_thickness, lineType=cv2.LINE_AA)
 
-
+# code body
 with mp_hands.Hands(
     model_complexity=0,
     min_detection_confidence=0.6,
@@ -513,7 +522,7 @@ with mp_hands.Hands(
     #TEST CODE
     ###########################
     #add letters to draw
-    get_current_letter(results)
+    get_current_letter(results, MAX_LETTERS)
 
     #update laters if it is the track frame
     is_track_frame = track_progress()
@@ -522,7 +531,6 @@ with mp_hands.Hands(
     
     # Add GUI
     draw_if(image)
-
     #END TEST CODE
     ###########################
 

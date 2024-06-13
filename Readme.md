@@ -1,3 +1,10 @@
+# Usage:
+Run make to see the code usage.\
+## Run
+When running the code: \
+1 - feedback bar indicates when the sign gesture will be added to the tracked word. \
+2 - reset gesture used to erase tracked word is a open hand.
+
 # Doc:
 https://docs.opencv.org/4.5.4/index.html \
 https://github.com/google-ai-edge/mediapipe/blob/master/docs/solutions/hands.md
