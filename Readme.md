@@ -17,8 +17,7 @@ https://github.com/google-ai-edge/mediapipe/tree/master/mediapipe/python/solutio
 ## Features:
 1 - Support left hand sign recognition \
 2 - Support hand gestures with multiple hands \
-3 - Add signs with 2 hands \
-4 - Split interface from image \
-5 - Add image hints
+3 - Split interface from image \
+4 - Add image hints
 ## Code improvement:
 1 - modularize gesture recognition code

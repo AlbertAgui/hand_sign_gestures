@@ -121,18 +121,32 @@ def is_correct_point(results, hand_id, point):
 #"Top"
 #"Down"
 #it is used to examine the position of the point 1 relative to point 0 of the hand for both x and y
+#IT WORKS DIFFERENT FOR RIGHT AND LEFT HAND, RIGHT WORKS AS THE REFERENCE, LEFT IS INVERTED IN X AXIS
 def is_point_at(results, hand_id, point1, point2, operation):
   is_at = 0
   if (is_correct_point(results, hand_id, point1) and 
       is_correct_point(results, hand_id, point2)):
     coordinate1 = get_hand_point_landmark(results, hand_id, point1)
     coordinate2 = get_hand_point_landmark(results, hand_id, point2)
-    if operation == "Left":
-      if (coordinate1[0] > coordinate2[0]):
-        is_at = 1
-    elif operation == "Right":
-      if (coordinate1[0] > coordinate2[0]):
-        is_at = 1
+    #get hand label to use position relative to hand
+    hand_label = get_hand_label(results, hand_id)
+    #right case
+    if(hand_label == "Right"):
+      if operation == "Left":
+        if (coordinate1[0] > coordinate2[0]):
+          is_at = 1
+      elif operation == "Right":
+        if (coordinate1[0] > coordinate2[0]):
+          is_at = 1
+    #left case
+    if(hand_label == "Left"):
+      if operation == "Left":
+        if (coordinate1[0] < coordinate2[0]):
+          is_at = 1
+      elif operation == "Right":
+        if (coordinate1[0] > coordinate2[0]):
+          is_at = 1
+    #check always
     if operation == "Top":
       if (coordinate1[1] < coordinate2[1]):
         is_at = 1
@@ -356,28 +370,37 @@ def reset_gesture(results,hand_id):
   return found
 
 #get letters
-def logic_get_letter(results,hand_id):
+def logic_get_letter(results):
   letter = ""
-  if letter_A(results,hand_id):
-    letter = "A"
-  if letter_B(results,hand_id):
-    letter = "B"
-  if letter_C(results,hand_id):
-    letter = "C"
-  if letter_D(results,hand_id):
-    letter = "D"
-  if letter_E(results,hand_id):
-    letter = "E"
-  if letter_F(results,hand_id):
-    letter = "F"
-  if letter_H(results,hand_id):
-    letter = "H"
-  if letter_L(results,hand_id):
-    letter = "L"
-  if letter_O(results,hand_id):
-    letter = "O"
-  if reset_gesture(results,hand_id):
-    letter = "RESET"
+  #single hand signs
+  num_hands = get_num_hand(results)
+  if(num_hands == 1):
+    hand_id = 0
+    # single hand signs
+    if letter_A(results,hand_id):
+      letter = "A"
+    if letter_B(results,hand_id):
+      letter = "B"
+    if letter_C(results,hand_id):
+      letter = "C"
+    if letter_D(results,hand_id):
+      letter = "D"
+    if letter_E(results,hand_id):
+      letter = "E"
+    if letter_F(results,hand_id):
+      letter = "F"
+    if letter_H(results,hand_id):
+      letter = "H"
+    if letter_L(results,hand_id):
+      letter = "L"
+    if letter_O(results,hand_id):
+      letter = "O"
+    if reset_gesture(results,hand_id):
+      letter = "RESET"
+  #double hand signs
+  #if(num_hands == 2):
+  elif(num_hands > 2):
+    print("THIS SHOUDN'T HAPPEN: num_hands > 2")
   return letter
 
 # Check current sign gesture in right hand
@@ -385,15 +408,15 @@ def logic_get_letter(results,hand_id):
 def get_current_letter(results, max_letters):
   global current_letter
   global letters
+  # not found case
   current_letter = ""
-  multi_hand_label = get_multi_hand_label(results)
-  for hand_id, label in multi_hand_label.items():
-      if label == "Right":
-        temp_letter = logic_get_letter(results,hand_id)
-        if ((len(letters) >= max_letters) and (len(temp_letter) != 0)):
-          current_letter = "RESET"
-        else:
-          current_letter = temp_letter
+  temp_letter = logic_get_letter(results)
+  # reset for having a big word + new sign
+  if ((len(letters) >= max_letters) and (len(temp_letter) != 0)):
+    current_letter = "RESET"
+  # normal case
+  else:
+    current_letter = temp_letter
 
 # Update letters string
 # Reset if "RESET" letter found
