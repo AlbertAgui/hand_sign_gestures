@@ -1,5 +1,6 @@
 # Usage:
-Run make to see the code usage.\
+Run make to see the code usage.
+
 ## Run
 When running the code: \
 1 - feedback bar indicates when the sign gesture will be added to the tracked word. \
