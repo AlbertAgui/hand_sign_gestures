@@ -575,7 +575,7 @@ def letter_X(results,hand_id):
   and is_point_at(results,hand_id,9,13,"Top")and is_point_at(results,hand_id,13,17,"Top")
   and is_point_at(results,hand_id,12,17,"Top")and is_point_at(results,hand_id,8,12,"Top")
   and is_point_at(results,hand_id,12,16,"Top")and is_point_at(results,hand_id,12,20,"Top")
-  and is_point_at(results,hand_id,8,10,"Top")):
+  and is_point_at(results,hand_id,8,10,"Top")and is_point_at(results,hand_id,7,8,"Top")):
     if(is_point_at(results,hand_id,2,3,"Left")and is_point_at(results,hand_id,6,7,"Left")
     and is_point_at(results,hand_id,7,8,"Left")
     and is_point_at(results,hand_id,5,9,"Left")and is_point_at(results,hand_id,9,13,"Left")
@@ -603,9 +603,6 @@ def letter_Y(results,hand_id):
 
 #Defines an hearth made with both hands
 def corazon(results):
-  found = 0
-  right_hand=(0,0)
-  left_hand=(0,0)
   #both hands use half hearth shape
   multi_hand_label = get_multi_hand_label(results)
   for hand_id, label in multi_hand_label.items():
@@ -622,7 +619,6 @@ def corazon(results):
           #and get index finger landmarks
           hand_0_label = get_hand_label(results,0)
           hand_1_label = get_hand_label(results,1)
-          print("hand_0_label: ", hand_0_label, " hand_1_label: ", hand_1_label)
           if (hand_0_label == "Right" and hand_1_label == "Left"):
             right_hand=get_hand_point_landmark(results,0,8)
             left_hand=get_hand_point_landmark(results,1,8)
@@ -632,7 +628,8 @@ def corazon(results):
           else:
             return 0
           #hands are close enough in index finger
-          if(((right_hand[1]-left_hand[1])<0.2) and ((right_hand[0]-left_hand[0])<0.2)):
+          print("right_hand[1]-left_hand[1]: ", right_hand[1]-left_hand[1], " right_hand[0]-left_hand[0]: ", right_hand[0]-left_hand[0])
+          if(((right_hand[1]-left_hand[1])<0.01) and ((left_hand[0]-right_hand[0])<0.03)):
             return 1
   return 0
 
