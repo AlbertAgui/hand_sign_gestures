@@ -226,10 +226,16 @@ def letter_A(results,hand_id):
   A_letter=0
   if(is_point_at(results,hand_id,7,8,"Top") and is_point_at(results,hand_id,11,12,"Top")
   and is_point_at(results,hand_id,15,16,"Top")and is_point_at(results,hand_id,19,20,"Top")
-  and is_point_at(results,hand_id,4,8,"Top")and is_point_at(results,hand_id,4,3,"Top")
-  and is_point_at(results,hand_id,2,1,"Top")):
+  and is_point_at(results,hand_id,4,3,"Top")and is_point_at(results,hand_id,2,1,"Top")
+  and is_point_at(results,hand_id,4,6,"Top")and is_point_at(results,hand_id,4,10,"Top")
+  and is_point_at(results,hand_id,4,14,"Top")and is_point_at(results,hand_id,4,18,"Top")
+  and is_point_at(results,hand_id,10,11,"Top")and is_point_at(results,hand_id,14,15,"Top")
+  and is_point_at(results,hand_id,18,19,"Top")and is_point_at(results,hand_id,6,7,"Top")):
    if(is_point_at(results,hand_id,4,8,"Left") and is_point_at(results,hand_id,3,7,"Left")
-   and is_point_at(results,hand_id,2,6,"Left")and is_point_at(results,hand_id,2,5,"Left")):
+   and is_point_at(results,hand_id,2,6,"Left")and is_point_at(results,hand_id,2,5,"Left")
+   and is_point_at(results,hand_id,4,8,"Left")and is_point_at(results,hand_id,8,12,"Left")
+   and is_point_at(results,hand_id,12,16,"Left")and is_point_at(results,hand_id,16,20,"Left")
+   and is_point_at(results,hand_id,3,7,"Left")and is_point_at(results,hand_id,4,6,"Left")):
      A_letter=1
      print("The letter represented is A") 
   return A_letter
@@ -256,7 +262,8 @@ def letter_C(results,hand_id):
    and is_point_at(results,hand_id,7,8,"Left")and is_point_at(results,hand_id,0,1,"Left")
    and is_point_at(results,hand_id,6,7,"Left")and is_point_at(results,hand_id,5,6,"Left")
    and is_point_at(results,hand_id,10,11,"Left")and is_point_at(results,hand_id,0,5,"Left")
-   and is_point_at(results,hand_id,0,9,"Left")):
+   and is_point_at(results,hand_id,6,4,"Left") and is_point_at(results,hand_id,5,4,"Left")
+   and is_point_at(results,hand_id,14,4,"Left")and is_point_at(results,hand_id,0,9,"Left")):
      C_letter=1
      print("The letter represented is C") 
   return C_letter 
@@ -268,9 +275,12 @@ def letter_D(results,hand_id):
   and is_point_at(results,hand_id,7,6,"Top")and is_point_at(results,hand_id,6,4,"Top")
   and is_point_at(results,hand_id,11,4,"Top")and is_point_at(results,hand_id,15,4,"Top")
   and is_point_at(results,hand_id,3,2,"Top")and is_point_at(results,hand_id,2,1,"Top")
-  and is_point_at(results,hand_id,1,0,"Top")and is_point_at(results,hand_id,5,4,"Top")):
+  and is_point_at(results,hand_id,1,0,"Top")and is_point_at(results,hand_id,14,15,"Top")
+  and is_point_at(results,hand_id,10,11,"Top")and is_point_at(results,hand_id,7,6,"Top")):
    if(is_point_at(results,hand_id,3,4,"Left") and is_point_at(results,hand_id,5,9,"Left")
-   and is_point_at(results,hand_id,9,13,"Left")and is_point_at(results,hand_id,13,17,"Left")):
+   and is_point_at(results,hand_id,9,13,"Left")and is_point_at(results,hand_id,13,17,"Left")
+   and is_point_at(results,hand_id,8,4,"Left")and is_point_at(results,hand_id,4,16,"Left")
+   and is_point_at(results,hand_id,3,4,"Left")and is_point_at(results,hand_id,2,1,"Left")):
      D_letter=1
      print("The letter represented is D") 
   return D_letter
@@ -281,8 +291,10 @@ def letter_E(results,hand_id):
   if(is_point_at(results,hand_id,7,8,"Top") and is_point_at(results,hand_id,11,12,"Top")
   and is_point_at(results,hand_id,15,16,"Top")and is_point_at(results,hand_id,19,20,"Top")
   and is_point_at(results,hand_id,8,4,"Top")and is_point_at(results,hand_id,12,4,"Top")
-  and is_point_at(results,hand_id,16,4,"Top")and is_point_at(results,hand_id,20,4,"Top")):
-   if(is_point_at(results,hand_id,8,4,"Left") and is_point_at(results,hand_id,4,20,"Left")):
+  and is_point_at(results,hand_id,16,4,"Top")and is_point_at(results,hand_id,20,4,"Top")
+  and is_point_at(results,hand_id,4,0,"Top")):
+   if(is_point_at(results,hand_id,8,4,"Left") and is_point_at(results,hand_id,4,20,"Left")
+  and is_point_at(results,hand_id,4,13,"Left")):
      print("The letter represented is E") 
      E_letter=1
   return E_letter
@@ -303,30 +315,126 @@ def letter_F(results,hand_id):
      print("The letter represented is F") 
   return F_letter
 
+def letter_G(results,hand_id):
+  G_letter=0
+  if(is_point_at(results,hand_id,11,12,"Top") and is_point_at(results,hand_id,15,16,"Top")
+  and is_point_at(results,hand_id,19,20,"Top")and is_point_at(results,hand_id,8,7,"Top")
+  and is_point_at(results,hand_id,7,11,"Top")and is_point_at(results,hand_id,4,11,"Top")
+  and is_point_at(results,hand_id,4,15,"Top")and is_point_at(results,hand_id,4,20,"Top")
+  and is_point_at(results,hand_id,6,5,"Top")and is_point_at(results,hand_id,7,6,"Top")
+  and is_point_at(results,hand_id,10,4,"Top")and is_point_at(results,hand_id,4,5,"Top") ):
+   if(is_point_at(results,hand_id,3,12,"Left") and is_point_at(results,hand_id,12,16,"Left")
+   and is_point_at(results,hand_id,16,20,"Left")and is_point_at(results,hand_id,4,12,"Left")):
+     G_letter=1
+     print("The letter represented is G") 
+  return G_letter
+
+
 
 def letter_H(results,hand_id):
   H_letter=0
   if(is_point_at(results,hand_id,8,12,"Top") and is_point_at(results,hand_id,7,11,"Top")
   and is_point_at(results,hand_id,16,20,"Top")and is_point_at(results,hand_id,4,16,"Top")
-  and is_point_at(results,hand_id,5,9,"Top")and is_point_at(results,hand_id,20,0,"Top")):
+  and is_point_at(results,hand_id,5,9,"Top")and is_point_at(results,hand_id,16,20,"Top")
+  and is_point_at(results,hand_id,12,11,"Top")and is_point_at(results,hand_id,11,10,"Top")
+  and is_point_at(results,hand_id,8,7,"Top")and is_point_at(results,hand_id,7,6,"Top")
+  and is_point_at(results,hand_id,6,5,"Top")):
    if(is_point_at(results,hand_id,0,5,"Left") and is_point_at(results,hand_id,0,9,"Left")
-   and is_point_at(results,hand_id,0,20,"Left")and is_point_at(results,hand_id,0,16,"Left")):
+   and is_point_at(results,hand_id,0,13,"Left")and is_point_at(results,hand_id,0,17,"Left")
+   and  is_point_at(results,hand_id,16,4,"Left")and is_point_at(results,hand_id,5,4,"Left")
+   and is_point_at(results,hand_id,20,10,"Left")and is_point_at(results,hand_id,16,10,"Left")):
      H_letter=1
      print("The letter represented is H") 
   return H_letter
+
+def letter_I(results,hand_id):
+  I_letter=0
+  if(is_point_at(results,hand_id,20,19,"Top") and is_point_at(results,hand_id,15,16,"Top")
+  and is_point_at(results,hand_id,11,12,"Top")and is_point_at(results,hand_id,3,8,"Top")
+  and is_point_at(results,hand_id,3,2,"Top")and is_point_at(results,hand_id,2,1,"Top")
+  and is_point_at(results,hand_id,4,8,"Top")and is_point_at(results,hand_id,4,12,"Top")
+  and is_point_at(results,hand_id,4,16,"Top")):
+   if(is_point_at(results,hand_id,8,12,"Left") and is_point_at(results,hand_id,12,16,"Left")
+   and is_point_at(results,hand_id,16,20,"Left")and is_point_at(results,hand_id,8,4,"Left")
+   and is_point_at(results,hand_id,4,16,"Left")and is_point_at(results,hand_id,5,4,"Left")
+   and is_point_at(results,hand_id,4,0,"Left")and is_point_at(results,hand_id,12,0,"Left")):
+     I_letter=1
+     print("The letter represented is I") 
+  return I_letter
+
+def letter_K(results,hand_id):
+  K_letter=0
+  if(is_point_at(results,hand_id,12,8,"Top") and is_point_at(results,hand_id,14,18,"Top")
+  and is_point_at(results,hand_id,15,16,"Top")and is_point_at(results,hand_id,19,20,"Top")
+  and is_point_at(results,hand_id,4,14,"Top")and is_point_at(results,hand_id,4,5,"Top")
+  and is_point_at(results,hand_id,5,15,"Top")and is_point_at(results,hand_id,5,19,"Top")
+  and is_point_at(results,hand_id,8,7,"Top")and is_point_at(results,hand_id,7,6,"Top")
+  and is_point_at(results,hand_id,6,5,"Top")and is_point_at(results,hand_id,12,11,"Top")
+  and is_point_at(results,hand_id,11,10,"Top")):
+   if(is_point_at(results,hand_id,8,4,"Left") and is_point_at(results,hand_id,7,4,"Left")
+   and is_point_at(results,hand_id,6,4,"Left")and is_point_at(results,hand_id,4,12,"Left")
+   and is_point_at(results,hand_id,4,14,"Left")):
+     K_letter=1
+     print("The letter represented is K") 
+  return K_letter
+
 
 def letter_L(results,hand_id):
   L_letter=0
   if(is_point_at(results,hand_id,8,7,"Top") and is_point_at(results,hand_id,6,5,"Top")
   and is_point_at(results,hand_id,4,3,"Top")and is_point_at(results,hand_id,2,1,"Top")
   and is_point_at(results,hand_id,1,0,"Top")and is_point_at(results,hand_id,11,12,"Top")
-  and is_point_at(results,hand_id,15,16,"Top")and is_point_at(results,hand_id,19,20,"Top")):
+  and is_point_at(results,hand_id,15,16,"Top")and is_point_at(results,hand_id,19,20,"Top")
+  and is_point_at(results,hand_id,5,4,"Top")and is_point_at(results,hand_id,14,4,"Top")
+  and is_point_at(results,hand_id,7,6,"Top")and is_point_at(results,hand_id,3,2,"Top")
+  and is_point_at(results,hand_id,10,11,"Top")and is_point_at(results,hand_id,14,15,"Top")):
    if(is_point_at(results,hand_id,5,9,"Left") and is_point_at(results,hand_id,9,13,"Left")
-    and is_point_at(results,hand_id,13,17,"Left")and is_point_at(results,hand_id,1,5,"Left")):
+    and is_point_at(results,hand_id,13,17,"Left")and is_point_at(results,hand_id,1,5,"Left")
+    and is_point_at(results,hand_id,5,9,"Left")and is_point_at(results,hand_id,4,3,"Left")
+    and is_point_at(results,hand_id,3,2,"Left")and is_point_at(results,hand_id,2,1,"Left")
+    and is_point_at(results,hand_id,2,5,"Left")):
      L_letter=1
      print("The letter represented is L")
-
   return L_letter
+
+def letter_M(results,hand_id):
+  M_letter=0
+  if(is_point_at(results,hand_id,14,4,"Top") and is_point_at(results,hand_id,14,18,"Top")
+  and is_point_at(results,hand_id,6,7,"Top")and is_point_at(results,hand_id,7,8,"Top")
+  and is_point_at(results,hand_id,10,4,"Top")and is_point_at(results,hand_id,14,4,"Top")
+  and is_point_at(results,hand_id,6,4,"Top")and is_point_at(results,hand_id,11,12,"Top")
+  and is_point_at(results,hand_id,14,15,"Top")and is_point_at(results,hand_id,15,16,"Top")
+  and is_point_at(results,hand_id,18,19,"Top")and is_point_at(results,hand_id,19,20,"Top")
+  and is_point_at(results,hand_id,18,20,"Top")and is_point_at(results,hand_id,8,20,"Top")
+  and is_point_at(results,hand_id,12,20,"Top")and is_point_at(results,hand_id,4,18,"Top")
+  and is_point_at(results,hand_id,16,20,"Top")):
+   if(is_point_at(results,hand_id,16,4,"Left") and is_point_at(results,hand_id,8,4,"Left")
+    and is_point_at(results,hand_id,14,4,"Left")and is_point_at(results,hand_id,8,12,"Left")
+    and is_point_at(results,hand_id,12,16,"Left")and is_point_at(results,hand_id,16,20,"Left")
+    and is_point_at(results,hand_id,6,10,"Left")and is_point_at(results,hand_id,10,14,"Left")
+    and is_point_at(results,hand_id,14,18,"Left")):
+     M_letter=1
+     print("The letter represented is M")
+  return M_letter
+
+def letter_N(results,hand_id):
+  N_letter=0
+  if(is_point_at(results,hand_id,4,14,"Top") and is_point_at(results,hand_id,14,18,"Top")
+  and is_point_at(results,hand_id,10,6,"Top")and is_point_at(results,hand_id,6,7,"Top")
+  and is_point_at(results,hand_id,7,8,"Top")and is_point_at(results,hand_id,10,11,"Top")
+  and is_point_at(results,hand_id,14,15,"Top")and is_point_at(results,hand_id,11,12,"Top")
+  and is_point_at(results,hand_id,15,16,"Top")and is_point_at(results,hand_id,15,16,"Top")
+  and is_point_at(results,hand_id,18,19,"Top")and is_point_at(results,hand_id,19,20,"Top")
+  and is_point_at(results,hand_id,12,8,"Top")and is_point_at(results,hand_id,8,16,"Top")
+  and is_point_at(results,hand_id,4,10,"Top")):
+   if(is_point_at(results,hand_id,12,4,"Left") and is_point_at(results,hand_id,8,4,"Left")
+    and is_point_at(results,hand_id,10,4,"Left")and is_point_at(results,hand_id,4,14,"Left")
+    and is_point_at(results,hand_id,8,12,"Left")and is_point_at(results,hand_id,12,16,"Left")
+    and is_point_at(results,hand_id,16,20,"Left")and is_point_at(results,hand_id,6,10,"Left")
+    and is_point_at(results,hand_id,10,14,"Left"))and is_point_at(results,hand_id,14,18,"Left"):
+     N_letter=1
+     print("The letter represented is N")
+  return N_letter
 
 def letter_O(results,hand_id):
   O_letter=0
@@ -340,6 +448,193 @@ def letter_O(results,hand_id):
      print("The letter represented is O") 
      O_letter=1
   return O_letter
+
+def letter_P(results,hand_id):
+  P_letter=0
+  if(is_point_at(results,hand_id,8,7,"Top") and is_point_at(results,hand_id,7,6,"Top")
+  and is_point_at(results,hand_id,6,5,"Top")and is_point_at(results,hand_id,6,10,"Top")
+  and is_point_at(results,hand_id,10,14,"Top")and is_point_at(results,hand_id,15,16,"Top")
+  and is_point_at(results,hand_id,5,9,"Top")and is_point_at(results,hand_id,9,13,"Top")
+  and is_point_at(results,hand_id,13,17,"Top")and is_point_at(results,hand_id,4,14,"Top")):
+   if(is_point_at(results,hand_id,5,4,"Left") and is_point_at(results,hand_id,4,6,"Left")
+   and is_point_at(results,hand_id,4,10,"Left")and is_point_at(results,hand_id,4,16,"Left")
+   and is_point_at(results,hand_id,0,5,"Left")and is_point_at(results,hand_id,0,9,"Left")
+   and is_point_at(results,hand_id,0,13,"Left")and is_point_at(results,hand_id,0,17,"Left")):
+     P_letter=1
+     print("The letter represented is P") 
+  return P_letter
+
+def letter_Q(results,hand_id):
+  Q_letter=0
+  if(is_point_at(results,hand_id,6,7,"Top") and is_point_at(results,hand_id,7,8,"Top")
+  and is_point_at(results,hand_id,5,6,"Top")and is_point_at(results,hand_id,3,4,"Top")
+  and is_point_at(results,hand_id,2,3,"Top")and is_point_at(results,hand_id,1,2,"Top")
+  and is_point_at(results,hand_id,0,17,"Top")and is_point_at(results,hand_id,5,1,"Top")
+  and is_point_at(results,hand_id,10,6,"Top")):
+   if(is_point_at(results,hand_id,1,2,"Left") and is_point_at(results,hand_id,2,3,"Left")
+   and is_point_at(results,hand_id,3,4,"Left")and is_point_at(results,hand_id,5,6,"Left")
+   and is_point_at(results,hand_id,9,10,"Left")and is_point_at(results,hand_id,13,14,"Left")
+   and is_point_at(results,hand_id,17,18,"Left")and is_point_at(results,hand_id,0,11,"Left")):
+     Q_letter=1
+     print("The letter represented is Q") 
+  return Q_letter
+
+
+def letter_R(results,hand_id):
+  R_letter=0
+  if(is_point_at(results,hand_id,12,8,"Top") and is_point_at(results,hand_id,8,7,"Top")
+  and is_point_at(results,hand_id,12,11,"Top")and is_point_at(results,hand_id,14,4,"Top")
+  and is_point_at(results,hand_id,4,16,"Top")and is_point_at(results,hand_id,4,20,"Top")
+  and is_point_at(results,hand_id,6,4,"Top")and is_point_at(results,hand_id,10,4,"Top")
+  and is_point_at(results,hand_id,19,20,"Top")and is_point_at(results,hand_id,15,16,"Top")):
+    if(is_point_at(results,hand_id,12,8,"Left") and is_point_at(results,hand_id,12,4,"Left")
+    and is_point_at(results,hand_id,8,4,"Left")and is_point_at(results,hand_id,4,20,"Left")):
+      R_letter=1
+      print("The letter represented is R") 
+  return R_letter
+
+def letter_S(results,hand_id):
+  S_letter=0
+  if(is_point_at(results,hand_id,4,12,"Top")
+  and is_point_at(results,hand_id,4,16,"Top")and is_point_at(results,hand_id,4,20,"Top")
+  and is_point_at(results,hand_id,14,18,"Top")and is_point_at(results,hand_id,10,6,"Top")
+  and is_point_at(results,hand_id,6,14,"Top")and is_point_at(results,hand_id,4,1,"Top")
+  and is_point_at(results,hand_id,14,15,"Top")and is_point_at(results,hand_id,10,11,"Top")
+  and is_point_at(results,hand_id,18,19,"Top")and is_point_at(results,hand_id,7,8,"Top")
+  and is_point_at(results,hand_id,6,7,"Top")):
+   if(is_point_at(results,hand_id,6,4,"Left") and is_point_at(results,hand_id,4,14,"Left")
+    and is_point_at(results,hand_id,10,14,"Left")and is_point_at(results,hand_id,14,18,"Left")
+    and is_point_at(results,hand_id,4,0,"Left")):
+     S_letter=1
+     print("The letter represented is S")
+  return S_letter
+
+def letter_T(results,hand_id):
+  T_letter=0
+
+  if(is_point_at(results,hand_id,4,3,"Top")and is_point_at(results,hand_id,2,1,"Top")
+  and is_point_at(results,hand_id,4,6,"Top")and is_point_at(results,hand_id,4,10,"Top")
+  and is_point_at(results,hand_id,4,14,"Top")and is_point_at(results,hand_id,4,18,"Top")
+  and is_point_at(results,hand_id,10,11,"Top")and is_point_at(results,hand_id,14,15,"Top")
+  and is_point_at(results,hand_id,18,19,"Top")and is_point_at(results,hand_id,6,7,"Top")):
+   if(is_point_at(results,hand_id,6,4,"Left")and is_point_at(results,hand_id,4,10,"Left")
+   and is_point_at(results,hand_id,10,14,"Left")and is_point_at(results,hand_id,14,18,"Left")):
+     T_letter=1
+     print("The letter represented is T") 
+  return T_letter
+
+
+def letter_U(results,hand_id):
+  U_letter=0
+  if(is_point_at(results,hand_id,12,11,"Top") and is_point_at(results,hand_id,11,10,"Top")
+  and is_point_at(results,hand_id,10,9,"Top")and is_point_at(results,hand_id,15,16,"Top")
+  and is_point_at(results,hand_id,19,20,"Top")and is_point_at(results,hand_id,8,7,"Top")
+  and is_point_at(results,hand_id,4,15,"Top")and is_point_at(results,hand_id,4,19,"Top")
+  and is_point_at(results,hand_id,6,5,"Top")and is_point_at(results,hand_id,7,6,"Top")):
+   if(is_point_at(results,hand_id,9,4,"Left") and is_point_at(results,hand_id,16,4,"Left")
+    and is_point_at(results,hand_id,2,8,"Left")and is_point_at(results,hand_id,8,12,"Left")
+    and is_point_at(results,hand_id,14,18,"Left")
+    and is_point_at(results,hand_id,5,8,"Left")):
+     U_letter=1
+     print("The letter represented is U")
+  return U_letter
+
+def letter_V(results,hand_id):
+  V_letter=0
+  if(is_point_at(results,hand_id,12,11,"Top") and is_point_at(results,hand_id,11,10,"Top")
+  and is_point_at(results,hand_id,10,9,"Top")and is_point_at(results,hand_id,15,16,"Top")
+  and is_point_at(results,hand_id,19,20,"Top")and is_point_at(results,hand_id,8,7,"Top")
+  and is_point_at(results,hand_id,4,15,"Top")and is_point_at(results,hand_id,4,19,"Top")
+  and is_point_at(results,hand_id,6,5,"Top")and is_point_at(results,hand_id,7,6,"Top")):
+   if(is_point_at(results,hand_id,9,4,"Left") and is_point_at(results,hand_id,16,4,"Left")
+    and is_point_at(results,hand_id,8,12,"Left")and is_point_at(results,hand_id,9,12,"Left")
+    and is_point_at(results,hand_id,14,18,"Left")
+    and is_point_at(results,hand_id,8,5,"Left")):
+     V_letter=1
+     print("The letter represented is V")
+  return V_letter
+
+def letter_W(results,hand_id):
+  W_letter=0
+  if(is_point_at(results,hand_id,12,11,"Top") and is_point_at(results,hand_id,11,10,"Top")
+  and is_point_at(results,hand_id,10,9,"Top")and is_point_at(results,hand_id,16,15,"Top")
+  and is_point_at(results,hand_id,19,20,"Top")and is_point_at(results,hand_id,8,7,"Top")
+  and is_point_at(results,hand_id,14,13,"Top")and is_point_at(results,hand_id,4,19,"Top")
+  and is_point_at(results,hand_id,6,5,"Top")and is_point_at(results,hand_id,7,6,"Top")):
+   if(is_point_at(results,hand_id,9,4,"Left") and is_point_at(results,hand_id,4,16,"Left")
+    and is_point_at(results,hand_id,8,12,"Left")
+    and is_point_at(results,hand_id,9,14,"Left")):
+     W_letter=1
+     print("The letter represented is W")
+  return W_letter
+
+def letter_X(results,hand_id):
+  X_letter=0
+  if (is_point_at(results,hand_id,6,5,"Top")
+  and is_point_at(results,hand_id,10,2,"Top")and is_point_at(results,hand_id,5,9,"Top")
+  and is_point_at(results,hand_id,9,13,"Top")and is_point_at(results,hand_id,13,17,"Top")
+  and is_point_at(results,hand_id,12,17,"Top")and is_point_at(results,hand_id,8,12,"Top")
+  and is_point_at(results,hand_id,12,16,"Top")and is_point_at(results,hand_id,12,20,"Top")
+  and is_point_at(results,hand_id,8,10,"Top")):
+    if(is_point_at(results,hand_id,2,3,"Left")and is_point_at(results,hand_id,6,7,"Left")
+    and is_point_at(results,hand_id,7,8,"Left")
+    and is_point_at(results,hand_id,5,9,"Left")and is_point_at(results,hand_id,9,13,"Left")
+    and is_point_at(results,hand_id,13,17,"Left")):
+     X_letter=1
+     print("The letter represented is X")
+  return X_letter
+
+def letter_Y(results,hand_id):
+  Y_letter=0
+  if(is_point_at(results,hand_id,6,4,"Top") and is_point_at(results,hand_id,4,3,"Top")
+  and is_point_at(results,hand_id,3,2,"Top")and is_point_at(results,hand_id,2,1,"Top")
+  and is_point_at(results,hand_id,20,19,"Top")and is_point_at(results,hand_id,19,18,"Top")
+  and is_point_at(results,hand_id,18,17,"Top")and is_point_at(results,hand_id,7,8,"Top")
+  and is_point_at(results,hand_id,11,12,"Top")and is_point_at(results,hand_id,15,16,"Top")
+  and is_point_at(results,hand_id,5,8,"Top")and is_point_at(results,hand_id,13,15,"Top")
+  and is_point_at(results,hand_id,9,11,"Top")):
+   if(is_point_at(results,hand_id,4,3,"Left") and is_point_at(results,hand_id,3,2,"Left")
+    and is_point_at(results,hand_id,2,1,"Left")and is_point_at(results,hand_id,1,8,"Left")
+    and is_point_at(results,hand_id,8,12,"Left")and is_point_at(results,hand_id,12,16,"Left")
+    and is_point_at(results,hand_id,16,20,"Left")and is_point_at(results,hand_id,0,20,"Left")):
+     Y_letter=1
+     print("The letter represented is Y")
+  return Y_letter
+
+#Defines an hearth made with both hands
+def corazon(results):
+  found = 0
+  right_hand=(0,0)
+  left_hand=(0,0)
+  #both hands use half hearth shape
+  multi_hand_label = get_multi_hand_label(results)
+  for hand_id, label in multi_hand_label.items():
+     if(is_point_at(results,hand_id,7,8,"Top")and is_point_at(results,hand_id,6,7,"Top")and is_point_at(results,hand_id,6,5,"Top")
+      and is_point_at(results,hand_id,11,12,"Top")and is_point_at(results,hand_id,10,11,"Top")and is_point_at(results,hand_id,10,9,"Top")
+      and is_point_at(results,hand_id,15,16,"Top")and is_point_at(results,hand_id,14,15,"Top")and is_point_at(results,hand_id,14,13,"Top")
+      and is_point_at(results,hand_id,19,20,"Top")and is_point_at(results,hand_id,18,19,"Top")and is_point_at(results,hand_id,18,17,"Top")
+      and is_point_at(results,hand_id,0,4,"Top")):
+        if(is_point_at(results,hand_id,4,3,"Left") and is_point_at(results,hand_id,3,2,"Left")
+        and is_point_at(results,hand_id,2,1,"Left")and is_point_at(results,hand_id,1,0,"Left")
+        and is_point_at(results,hand_id,5,1,"Left")and is_point_at(results,hand_id,9,1,"Left")
+        and is_point_at(results,hand_id,13,1,"Left")and is_point_at(results,hand_id,17,1,"Left")):
+          #check if one hand is left, the other is right
+          #and get index finger landmarks
+          hand_0_label = get_hand_label(results,0)
+          hand_1_label = get_hand_label(results,1)
+          print("hand_0_label: ", hand_0_label, " hand_1_label: ", hand_1_label)
+          if (hand_0_label == "Right" and hand_1_label == "Left"):
+            right_hand=get_hand_point_landmark(results,0,8)
+            left_hand=get_hand_point_landmark(results,1,8)
+          elif (hand_0_label == "Left" and hand_1_label == "Right"):
+            right_hand=get_hand_point_landmark(results,1,8)
+            left_hand=get_hand_point_landmark(results,0,8)
+          else:
+            return 0
+          #hands are close enough in index finger
+          if(((right_hand[1]-left_hand[1])<0.2) and ((right_hand[0]-left_hand[0])<0.2)):
+            return 1
+  return 0
 
 #OPENED HAND
 def reset_gesture(results,hand_id):
@@ -389,16 +684,53 @@ def logic_get_letter(results):
       letter = "E"
     if letter_F(results,hand_id):
       letter = "F"
+    if letter_G(results,hand_id):
+      letter = "G"
     if letter_H(results,hand_id):
       letter = "H"
+    if letter_I(results,hand_id):
+      letter = "I"
+    # Not implemented cause it implies not just a gesture but movement
+    #if letter_J(results,hand_id):
+    #  letter = "J"
+    if letter_K(results,hand_id):
+      letter = "K"
     if letter_L(results,hand_id):
       letter = "L"
+    if letter_M(results,hand_id):
+      letter = "M"
+    if letter_N(results,hand_id):
+      letter = "N"
     if letter_O(results,hand_id):
       letter = "O"
+    if letter_P(results,hand_id):
+      letter = "P"
+    if letter_Q(results,hand_id):
+      letter = "Q"
+    if letter_R(results,hand_id):
+      letter = "R"
+    if letter_S(results,hand_id):
+      letter = "S"
+    if letter_T(results,hand_id):
+      letter = "T"
+    if letter_U(results,hand_id):
+      letter = "U"
+    if letter_V(results,hand_id):
+      letter = "V"
+    if letter_W(results,hand_id):
+      letter = "W"
+    if letter_X(results,hand_id):
+      letter = "X"
+    if letter_Y(results,hand_id):
+      letter = "Y"
+    #if letter_Z(results,hand_id):
+    #  letter = "Z"
     if reset_gesture(results,hand_id):
       letter = "RESET"
   #double hand signs
-  #if(num_hands == 2):
+  if(num_hands == 2):
+    if corazon(results):
+      letter = "<3"
   elif(num_hands > 2):
     print("THIS SHOUDN'T HAPPEN: num_hands > 2")
   return letter
