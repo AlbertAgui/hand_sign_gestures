@@ -490,7 +490,7 @@ def letter_X(results,hand_id):
   and is_point_at(results,hand_id,9,13,"Top")and is_point_at(results,hand_id,13,17,"Top")
   and is_point_at(results,hand_id,12,17,"Top")and is_point_at(results,hand_id,8,12,"Top")
   and is_point_at(results,hand_id,12,16,"Top")and is_point_at(results,hand_id,12,20,"Top")
-  and is_point_at(results,hand_id,8,10,"Top")):
+  and is_point_at(results,hand_id,8,10,"Top")and is_point_at(results,hand_id,7,8,"Top")):
     if(is_point_at(results,hand_id,2,3,"Left")and is_point_at(results,hand_id,6,7,"Left")
     and is_point_at(results,hand_id,7,8,"Left")
     and is_point_at(results,hand_id,5,9,"Left")and is_point_at(results,hand_id,9,13,"Left")
@@ -535,16 +535,16 @@ def corazon(results,hand_id):
         and is_point_at(results,hand_id,13,1,"Left")and is_point_at(results,hand_id,17,1,"Left")):
          right_hand=get_hand_point_landmark(results,hand_id,8)
     if label == "Left":
-      if(is_point_at(results,hand_id,7,8,"Top")and is_point_at(results,hand_id,6,7,"Top")and is_point_at(results,hand_id,6,5,"Top")
-        and is_point_at(results,hand_id,11,12,"Top")and is_point_at(results,hand_id,10,11,"Top")and is_point_at(results,hand_id,10,9,"Top")
-        and is_point_at(results,hand_id,15,16,"Top")and is_point_at(results,hand_id,14,15,"Top")and is_point_at(results,hand_id,14,13,"Top")
-        and is_point_at(results,hand_id,19,20,"Top")and is_point_at(results,hand_id,18,19,"Top")and is_point_at(results,hand_id,18,17,"Top")):
-        if(is_point_at(results,hand_id,3,4,"Left") and is_point_at(results,hand_id,2,3,"Left")
-          and is_point_at(results,hand_id,1,2,"Left")and is_point_at(results,hand_id,0,1,"Left")
-          and is_point_at(results,hand_id,1,5,"Left")and is_point_at(results,hand_id,1,9,"Left")
-          and is_point_at(results,hand_id,1,13,"Left")and is_point_at(results,hand_id,1,17,"Left")):
-             left_hand=get_hand_point_landmark(results,hand_id,8)
-  if(((right_hand[1]-left_hand[1])<0.2) and ((right_hand[0]-left_hand[0])<0.2)):
+            if(is_point_at(results,hand_id,7,8,"Top")and is_point_at(results,hand_id,6,7,"Top")and is_point_at(results,hand_id,6,5,"Top")
+              and is_point_at(results,hand_id,11,12,"Top")and is_point_at(results,hand_id,10,11,"Top")and is_point_at(results,hand_id,10,9,"Top")
+              and is_point_at(results,hand_id,15,16,"Top")and is_point_at(results,hand_id,14,15,"Top")and is_point_at(results,hand_id,14,13,"Top")
+              and is_point_at(results,hand_id,19,20,"Top")and is_point_at(results,hand_id,18,19,"Top")and is_point_at(results,hand_id,18,17,"Top")):
+              if(is_point_at(results,hand_id,3,4,"Left") and is_point_at(results,hand_id,2,3,"Left")
+                and is_point_at(results,hand_id,1,2,"Left")and is_point_at(results,hand_id,0,1,"Left")
+                and is_point_at(results,hand_id,1,5,"Left")and is_point_at(results,hand_id,1,9,"Left")
+                and is_point_at(results,hand_id,1,13,"Left")and is_point_at(results,hand_id,1,17,"Left")):
+                   left_hand=get_hand_point_landmark(results,hand_id,8)
+  if(((right_hand[1]-left_hand[1])<0.2) and ((right_hand[0]-left_hand[0])<0.2) and right_hand!=(0,0)and left_hand!=(0,0)):
     print("<3")           
 
 with mp_hands.Hands(
