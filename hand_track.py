@@ -480,7 +480,7 @@ def letter_W(results,hand_id):
     and is_point_at(results,hand_id,8,12,"Left")
     and is_point_at(results,hand_id,9,14,"Left")):
      W_letter=1
-     print("The letter represented is W")
+     print("The letter represen ted is W")
   return W_letter
 
 def letter_X(results,hand_id):
